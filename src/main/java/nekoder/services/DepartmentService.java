@@ -18,4 +18,8 @@ public class DepartmentService {
         }
         return res.toString();
     }
+
+    public static String getAverageSalary(Department searchDep) {
+        return Double.toString(searchDep.getLectors().stream().mapToInt(Lector::getSalary).average().orElse(0));
+    }
 }

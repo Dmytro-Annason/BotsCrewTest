@@ -2,6 +2,7 @@ package nekoder.controllers;
 
 import nekoder.entities.Department;
 import nekoder.entities.Lector;
+import nekoder.entities.SearchQuery;
 import nekoder.entities.enums.Degree;
 import nekoder.repositories.DepartmentRepository;
 import nekoder.repositories.LectorRepository;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class MainController {
     @Autowired
@@ -20,6 +23,11 @@ public class MainController {
 
     @Autowired
     LectorRepository lectorRepository;
+
+    @ModelAttribute("query")
+    public SearchQuery createQuery() {
+        return new SearchQuery();
+    }
 
     @GetMapping(value = "/")
     public String index() {
@@ -68,8 +76,8 @@ public class MainController {
 
     @GetMapping(value = "/headOfDepartments")
     public String headOfDepartments(Model model) {
-        model.addAttribute("title","Head of department");
-        model.addAttribute("action","headOfDepartments");
+        model.addAttribute("title", "head of department");
+        model.addAttribute("action", "headOfDepartments");
         model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
         return "chooseDepartment";
@@ -84,33 +92,59 @@ public class MainController {
 
     @GetMapping(value = "/statistic")
     public String statistic(Model model) {
-        model.addAttribute("title","Statistic");
-        model.addAttribute("action","statistic");
+        model.addAttribute("title", "statistic of department");
+        model.addAttribute("action", "statistic");
         model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
-        return "statistic";
+        return "chooseDepartment";
     }
 
     @PostMapping(value = "/statistic")
     public String statisticSubmit(@ModelAttribute Department department, Model model) {
         Department searchDep = departmentRepository.findById(department.getId());
-        model.addAttribute("result", DepartmentService.getStatisticByDegree(searchDep));
+        model.addAttribute("result", "Statistic of " + searchDep.getName() + " : "
+                + DepartmentService.getStatisticByDegree(searchDep));
         return "result";
     }
 
     @GetMapping(value = "/salaryAverage")
     public String salaryAverage(Model model) {
-        model.addAttribute("title","Salary average");
-        model.addAttribute("action","salaryAverage");
+        model.addAttribute("title", "salary average of department");
+        model.addAttribute("action", "salaryAverage");
         model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
-        return "salaryAverage";
+        return "chooseDepartment";
     }
 
     @PostMapping(value = "/salaryAverage")
     public String salaryAverageSubmit(@ModelAttribute Department department, Model model) {
-        /*Department searchDep = departmentRepository.findById(department.getId());
-        model.addAttribute("result", DepartmentService.getStatisticByDegree(searchDep));*/
+        Department searchDep = departmentRepository.findById(department.getId());
+        model.addAttribute("result", "Average salary of " + searchDep.getName() + " : "
+                + DepartmentService.getAverageSalary(searchDep));
         return "result";
+    }
+
+    @GetMapping(value = "/countEmployee")
+    public String countEmployee(Model model) {
+        model.addAttribute("title", "count employee of department");
+        model.addAttribute("action", "countEmployee");
+        model.addAttribute("department", new Department());
+        model.addAttribute("departments", departmentRepository.findAll());
+        return "chooseDepartment";
+    }
+
+    @PostMapping(value = "/countEmployee")
+    public String countEmployeeSubmit(@ModelAttribute Department department, Model model) {
+        Department searchDep = departmentRepository.findById(department.getId());
+        model.addAttribute("result", "Count employee of " + searchDep.getName() + " : "
+                + searchDep.getLectors().size());
+        return "result";
+    }
+
+    @PostMapping(value = "/find")
+    public String findSubmit(@ModelAttribute("query") SearchQuery query, Model model) {
+        model.addAttribute("search", true);
+        model.addAttribute("lectors", lectorRepository.freeSearch(query.getQuery()));
+        return "showLectors";
     }
 }
