@@ -29,6 +29,11 @@ public class MainController {
         return new SearchQuery();
     }
 
+    @ModelAttribute("department")
+    public Department createDepartment() {
+        return new Department();
+    }
+
     @GetMapping(value = "/")
     public String index() {
         return "index";
@@ -49,7 +54,6 @@ public class MainController {
 
     @GetMapping(value = "/addDepartment")
     public String addDepartment(Model model) {
-        model.addAttribute("department", new Department());
         model.addAttribute("lectors", lectorRepository.findAllWithoutDepartments());
         return "addDepartment";
     }
@@ -78,7 +82,6 @@ public class MainController {
     public String headOfDepartments(Model model) {
         model.addAttribute("title", "head of department");
         model.addAttribute("action", "headOfDepartments");
-        model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
         return "chooseDepartment";
     }
@@ -94,7 +97,6 @@ public class MainController {
     public String statistic(Model model) {
         model.addAttribute("title", "statistic of department");
         model.addAttribute("action", "statistic");
-        model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
         return "chooseDepartment";
     }
@@ -111,7 +113,6 @@ public class MainController {
     public String salaryAverage(Model model) {
         model.addAttribute("title", "salary average of department");
         model.addAttribute("action", "salaryAverage");
-        model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
         return "chooseDepartment";
     }
@@ -128,7 +129,6 @@ public class MainController {
     public String countEmployee(Model model) {
         model.addAttribute("title", "count employee of department");
         model.addAttribute("action", "countEmployee");
-        model.addAttribute("department", new Department());
         model.addAttribute("departments", departmentRepository.findAll());
         return "chooseDepartment";
     }
