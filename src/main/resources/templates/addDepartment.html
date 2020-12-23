@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragments/header"></div>
+    <title>Add department</title>
+</head>
+<body>
+<div th:replace="/fragments/navbar"></div>
+
+
+<form action="#" th:action="@{/addDepartment}" th:object="${department}" method="post" class="container-xl">
+    <h1>Add department</h1>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" aria-describedby="emailHelp" th:field="*{name}"/>
+    </div>
+
+    <div class="form-group">
+        <label for="head">Head</label>
+        <select class="form-control form-control-lg" id="head" th:field="*{head}">
+            <option th:each="head : ${lectors}"
+                    th:value="${head.id}"
+                    th:text="${head.firstName}+' '+${head.lastName}+' '+${head.thirdName}"></option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="lectors">Select lectors</label>
+        <select multiple="multiple" class="form-control" id="lectors" th:field="*{lectors}">
+            <option th:each="lector : ${lectors}"
+                    th:value="${lector.id}"
+                    th:text="${lector.firstName}+' '+${lector.lastName}+' '+${lector.thirdName}"></option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</body>
+</html>
